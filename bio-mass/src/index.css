@@ -1,4 +1,15 @@
+@import "leaflet/dist/leaflet.css";
 @import "tailwindcss";
-
-/* This forces Tailwind v4 to look at your tailwind.config.js file */
 @config "../tailwind.config.js";
+
+.leaflet-container {
+  width: 100% !important;
+  height: 500px !important;
+  background-color: #0f172a !important; 
+}
+
+
+.custom-marker-container {
+  background: transparent !important;
+  border: none !important;
+}
