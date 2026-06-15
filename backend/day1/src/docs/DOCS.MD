@@ -59,3 +59,18 @@
     export const db = drizzle(client, { schema });
 
 -Once the table has been defined, add the following block of code to our package.json file.
+
+
+## 4. INSERT A ROW THEN READ IT BACK.
+
+-For sturctural changes, anything affecting how the table currently looks like, the following commands are necessary after writing the code:
+
+    npx drizzle-kit generate
+    npx drizzle-kit migrate
+    npx drizzle-kit push
+
+-The mstructural changes live in the generated SQL files, for the files to appear, we need to run the first command.
+
+-However, if it is a data operation, adding or deleting data to the already exisiting columns, this runs whenever and no migration step is needed.
+
+-Data operation code lives in our Express server and not in the schema file.
