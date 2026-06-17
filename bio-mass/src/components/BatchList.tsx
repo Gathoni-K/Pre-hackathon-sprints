@@ -47,26 +47,20 @@ export default function BatchList() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {data.map(batch => (
+        {data.map(Batch=> (
           <div
-            key={batch.id}
+            key={Batch.id}
             className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900"
           >
             <div className="flex items-center justify-between mb-3">
-              <span className="font-bold text-slate-900 dark:text-white">{batch.name}</span>
+              <span className="font-bold text-slate-900 dark:text-white">{Batch.name}</span>
               <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                batch.status === 'Active'      ? 'bg-teal-500/10 text-teal-400' :
-                batch.status === 'Processing'  ? 'bg-yellow-500/10 text-yellow-400' :
+                Batch.status === 'Active'      ? 'bg-teal-500/10 text-teal-400' :
+                Batch.status === 'Processing'  ? 'bg-yellow-500/10 text-yellow-400' :
                                                  'bg-slate-500/10 text-slate-400'
               }`}>
-                {batch.status}
+                {Batch.status}
               </span>
-            </div>
-
-            <div className="space-y-1 text-sm text-slate-500 dark:text-slate-400">
-              <p>📍 {batch.location}</p>
-              <p>⚡ {batch.energyOutput} kWh</p>
-              <p>📅 {batch.startDate}</p>
             </div>
           </div>
         ))}

@@ -13,14 +13,16 @@ const customMarkerIcon = L.divIcon({
 
 
 const locationCoordinates: Record<string, [number, number]> = {
-  'Dunga':     [-0.1411, 34.7368],
-  'Usenge':    [-0.0677, 34.0558],
-  'Kendu Bay': [-0.3695, 34.6502],
+  'dunga':     [-0.1411, 34.7368],
+  'usenge':    [-0.0677, 34.0558],
+  'kendu bay': [-0.3695, 34.6502],
 };
+
+const normalizeLocation = (location: string) => location.trim().toLowerCase();
 
 export default function AssetMap() {
   const [isMounted, setIsMounted] = useState(false);
-  const { data: batches, loading, error } = useBatchData(); 
+  const { data: batches = [], loading, error } = useBatchData(); 
 
   useEffect(() => {
     setIsMounted(true);
@@ -61,7 +63,7 @@ export default function AssetMap() {
         />
 
         {batches.map(batch => {
-          const position = locationCoordinates[batch.location];
+          const position = locationCoordinates[normalizeLocation(batch.location)];
 
           if (!position) return null;
 
@@ -71,7 +73,7 @@ export default function AssetMap() {
                 <div className="p-1 min-w-[140px]">
                   <p className="font-bold text-slate-900 m-0">{batch.name}</p>
                   <p className="text-xs text-slate-500 mt-1 m-0">📍 {batch.location}</p>
-                  <p className="text-xs text-slate-500 m-0">⚡ {batch.energyOutput} kWh</p>
+                  <p className="text-xs text-slate-500 m-0">⚡ {batch.energy_output} kWh</p>
                   <p className="text-xs mt-1 m-0 font-medium" style={{
                     color: batch.status === 'Active' ? '#14b8a6' :
                            batch.status === 'Processing' ? '#eab308' : '#94a3b8'

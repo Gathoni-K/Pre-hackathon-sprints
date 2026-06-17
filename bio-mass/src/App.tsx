@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import Card from './components/Card';
 import Navbar from './components/Navbar';
-import PostList from './components/PostList';
 import BatchList from './components/BatchList';
 import AssetMap from './components/AssetMap';
 
@@ -33,7 +32,6 @@ function App() {
           </p>
         </header>
 
-        <PostList />
         <BatchList />
         <AssetMap />
       </main>
