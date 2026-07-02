@@ -1,0 +1,49 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+.custom-marker-container {
+  background: transparent !important;
+  border: none !important;
+}
+.marker-core-dot {
+  width: 14px;
+  height: 14px;
+  background-color: #14b8a6;
+  border: 2px solid #0f172a;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px rgba(20, 184, 166, 0.8);
+}
+
+.marker-pulse-ring {
+  width: 30px;
+  height: 30px;
+  background-color: rgba(20, 184, 166, 0.15);
+  border: 1.5px solid rgba(45, 212, 191, 0.5);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.marker-core-dot--active {
+  background-color: #2dd4bf !important;
+  box-shadow: 0 0 16px rgba(45, 212, 191, 1) !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.marker-pulse-ring--active {
+  width: 44px !important;
+  height: 44px !important;
+  border: 2px solid rgba(45, 212, 191, 0.8) !important;
+  animation: marker-ripple-active 1.2s ease-out infinite;
+}
+
+@keyframes marker-ripple-active {
+  0%   { transform: translate(-50%, -50%) scale(0.6); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1.4); opacity: 0; }
+}
