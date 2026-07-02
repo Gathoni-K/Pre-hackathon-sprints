@@ -10,12 +10,46 @@ const locationCoordinates: Record<string, [number, number]> = {
   'kendu bay': [-0.3695, 34.6502],
 };
 
-function getMarkerIcon(isSelected: boolean) {
+
+function calculateUrgency(batch: { start_date: string; energy_output: number }): number {
+  let score = 0;
+
+
+  const hoursOld = (Date.now() - new Date(batch.start_date).getTime()) / 3600000;
+  if (hoursOld > 72) score += 40;
+  else if (hoursOld > 24) score += 25;
+  else if (hoursOld > 6) score += 10;
+
+  if (batch.energy_output > 800) score += 35;
+  else if (batch.energy_output > 400) score += 20;
+  else score += 5;
+
+  return Math.min(score, 100);
+}
+
+function urgencyColor(score: number): string {
+  if (score >= 70) return '#EF4444';  
+  if (score >= 40) return '#F59E0B';  
+  return '#22C55E';              
+}
+
+function urgencyLabel(score: number): string {
+  if (score >= 70) return 'Critical';
+  if (score >= 40) return 'Moderate';
+  return 'Low';
+}
+
+
+function getMarkerIcon(isSelected: boolean, urgencyScore: number) {
+  const color = urgencyColor(urgencyScore);
   return L.divIcon({
     className: 'custom-marker-container',
-    html: `<div class="marker-pulse-ring${isSelected ? ' marker-pulse-ring--active' : ''}"></div><div class="marker-core-dot${isSelected ? ' marker-core-dot--active' : ''}"></div>`,
+    html: `
+      <div class="marker-pulse-ring${isSelected ? ' marker-pulse-ring--active' : ''}" style="border-color: ${color}"></div>
+      <div class="marker-core-dot${isSelected ? ' marker-core-dot--active' : ''}" style="background-color: ${color}"></div>
+    `,
     iconSize: [30, 30],
-    iconAnchor: [15, 15]
+    iconAnchor: [15, 15],
   });
 }
 
@@ -23,7 +57,6 @@ function getLocationCoordinates(location: string): [number, number] | undefined 
   return locationCoordinates[location.trim().toLowerCase()];
 }
 
-// Helper that pans the map whenever the selected pin changes
 function FlyToSelected({ position }: { position: [number, number] | null }) {
   const map = useMap();
   useEffect(() => {
@@ -87,14 +120,15 @@ export default function AssetMap({ selectedBatchId, onPinClick }: AssetMapProps)
           const position = getLocationCoordinates(batch.location);
           if (!position) return null;
           const isSelected = batch.id === selectedBatchId;
+          const urgency = calculateUrgency(batch);
 
           return (
             <Marker
               key={batch.id}
               position={position}
-              icon={getMarkerIcon(isSelected)}
+              icon={getMarkerIcon(isSelected, urgency)}
               eventHandlers={{
-                click: () => onPinClick(batch.id),   // ← task 4: clicking pin
+                click: () => onPinClick(batch.id),
               }}
             >
               <Popup>
@@ -102,6 +136,9 @@ export default function AssetMap({ selectedBatchId, onPinClick }: AssetMapProps)
                   <p className="font-bold text-slate-900 m-0">{batch.name}</p>
                   <p className="text-xs text-slate-500 mt-1 m-0">📍 {batch.location}</p>
                   <p className="text-xs text-slate-500 m-0">⚡ {batch.energy_output} kWh</p>
+                  <p className="text-xs font-semibold mt-1 m-0" style={{ color: urgencyColor(urgency) }}>
+                    {urgencyLabel(urgency)} — {urgency}/100
+                  </p>
                 </div>
               </Popup>
             </Marker>
